@@ -10,7 +10,7 @@ on:
     branches: [ main ]
   # 하루에 한번씩 아래 스크립트를 실행한다.
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "*/10 * * * *"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -21,16 +21,32 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: Install dependencies
         run: | 
           npm ci
           npm install rss-parser
+
       - name: Update README
         run: npm start
-      - name: Commit README
+
+      - name: Check if there are any changes
+        id: verify_diff
         run: |
-          git add .
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit README
+        if: steps.verify_diff.outputs.changed == 'true'
+        run: |
           git config --local user.email "todayilearn@naver.com"
           git config --local user.name "comsuter"
+          git add .
           git commit -m "Update README.md"
           git push origin main
+
+      - name: Push
+        if: steps.verify_diff.outputs.changed == 'true'
+        uses: ad-m/github-push-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
