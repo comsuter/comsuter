@@ -39,7 +39,7 @@ const parser = new Parser({
         console.log(`${i + 1}번째 게시물`);
         console.log(`추가될 제목: ${title}`);
         console.log(`추가될 링크: ${link}`);
-        text += `<li><a href='${link}' target='_blank'>${title}</a></li><br />`;
+        text += `<li><a href='${link}' target='_blank'>${title}</a></li>`;
     }
 
     text += `</ul>`;
