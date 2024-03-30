@@ -43,9 +43,3 @@ jobs:
           git add .
           git commit -m "Update README.md"
           git push origin main
-
-      - name: Push
-        if: steps.verify_diff.outputs.changed == 'true'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
