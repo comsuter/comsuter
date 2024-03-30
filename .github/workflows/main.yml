@@ -46,7 +46,6 @@ jobs:
 
       - name: Push
         if: steps.verify_diff.outputs.changed == 'true'
-        uses: comsuter/github-push-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
